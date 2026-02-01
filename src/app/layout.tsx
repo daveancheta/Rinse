@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     default: "Rinse",
     template: "%s | Rinse",
   },
-  description: "Laundr is a comprehensive web-based laundry management and monitoring system designed to streamline laundry operations for both service providers and customers. The platform provides real-time tracking of laundry orders from drop-off to delivery, ensuring transparency and improved customer experience.",
+  description: "Rinse is a comprehensive web-based laundry management and monitoring system designed to streamline laundry operations for both service providers and customers. The platform provides real-time tracking of laundry orders from drop-off to delivery, ensuring transparency and improved customer experience.",
 };
 
 export default function RootLayout({
