@@ -14,6 +14,10 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "All fields are required" }, { status: 400 })
         }
 
+        if (password.length < 8) {
+            return NextResponse.json({ message: "Password must be at least 8 characters long" }, { status: 400 })
+        }
+
         const existingUser = await db
             .select({ id: user.id })
             .from(user)
