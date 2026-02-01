@@ -1,3 +1,4 @@
+"use client"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -9,16 +10,31 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { UseAuthStore } from "@/app/state/use-auth-store"
+import { useState } from "react"
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { handleSignUp } = UseAuthStore()
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    name: ""
+  })
+
+  const signUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    handleSignUp(formData)
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form className="p-6 md:p-8" onSubmit={signUp}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Create your account</h1>
@@ -26,20 +42,24 @@ export function SignupForm({
                   Enter your email below to create your account
                 </p>
               </div>
-                <Field>
+              <Field>
                 <FieldLabel htmlFor="name">Full Name</FieldLabel>
                 <Input
                   id="name"
                   type="text"
                   placeholder="John Doe"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
-                </Field>
+              </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
                   type="email"
                   placeholder="johndoe@example.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
                 <FieldDescription>
                   We&apos;ll use this to contact you. We will not share your
@@ -47,16 +67,12 @@ export function SignupForm({
                 </FieldDescription>
               </Field>
               <Field>
-                <Field className="grid grid-cols-2 gap-4">
+                <Field>
                   <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" type="password" />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="confirm-password">
-                      Confirm Password
-                    </FieldLabel>
-                    <Input id="confirm-password" type="password" />
+                    <Input id="password" type="password"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
                   </Field>
                 </Field>
                 <FieldDescription>

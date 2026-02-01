@@ -1,6 +1,8 @@
 "use server";
+import { user } from "@/db/schema";
 import db from "@/index";
 import { auth } from "@/lib/auth"
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -12,11 +14,16 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "All fields are required" }, { status: 400 })
         }
 
-        const user = await db.query.user.findFirst(email)
-        if (user) {
+        const existingUser = await db
+            .select({ id: user.id })
+            .from(user)
+            .where(eq(user.email, email))
+            .limit(1);
+
+        if (existingUser.length) {
             return NextResponse.json({ message: "Email already exist" }, { status: 400 })
         }
-        
+
         await auth.api.signUpEmail({
             body: {
                 email: email,

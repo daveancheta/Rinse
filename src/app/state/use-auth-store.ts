@@ -1,8 +1,17 @@
 import { toast } from "sonner"
 import { create } from "zustand"
 
-export const UseAuthStore = create((set) => ({
-    handleSignUp: async (formData: FormData) => {
+interface User {
+    email: string,
+    password: string,
+    name: string
+}
+
+interface AuthState {
+    handleSignUp: (formData: User) => (void)
+}
+export const UseAuthStore = create<AuthState>((set) => ({
+    handleSignUp: async (formData: User) => {
         try {
             const res = await fetch("api/auth/signup", ({
                 method: "POSt",
