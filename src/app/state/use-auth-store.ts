@@ -11,14 +11,17 @@ interface User {
 interface AuthState {
     loading: boolean,
     isLoggedIn: boolean,
+    user: User | null,
     handleSignUp: (formData: User) => (void),
     handleSignIn: (formData: User) => (void),
+    handleGetSession: () => (void),
 }
 
 
 export const UseAuthStore = create<AuthState>((set) => ({
     loading: false,
     isLoggedIn: false,
+    user: null,
 
     handleSignUp: async (formData: User) => {
         set({ loading: true })
@@ -33,15 +36,15 @@ export const UseAuthStore = create<AuthState>((set) => ({
             const result = await res.json();
 
             if (result.success) {
-                toast.success("Account Created Successfully!")
+                toast.success("Account Created Successfully!");
             } else {
-                toast.error(result.message)
+                toast.error(result.message);
             }
 
         } catch (error: any) {
             toast.error(error.message || "Something went wrong");
         } finally {
-            set({ loading: false })
+            set({ loading: false });
         }
     },
 
@@ -58,14 +61,25 @@ export const UseAuthStore = create<AuthState>((set) => ({
             const result = await res.json();
 
             if (!result.success) {
-                set({ isLoggedIn: false })
+                set({ isLoggedIn: false });
             } else {
-                set({ isLoggedIn: true })
+                set({ isLoggedIn: true });
             }
         } catch (error: any) {
             toast.error(error.message);
         } finally {
-            set({ loading: false })
+            set({ loading: false });
+        }
+    },
+
+    handleGetSession: async () => {
+        try {
+            const res = await fetch("/api/session");
+            const data = await res.json();
+
+            set({ user: data.session?.user || null })
+        } catch (error) {
+            console.log(error)
         }
     }
 }))
