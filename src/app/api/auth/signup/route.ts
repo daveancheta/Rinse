@@ -39,10 +39,11 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true }, { status: 200 })
     } catch (error) {
         console.log(error)
+        const e = error as Error
         return NextResponse.json(
             {
                 success: false,
-                error: error
+                error: e.message
             },
             { status: 400 })
     }

@@ -1,6 +1,5 @@
 "use server";
 import { auth } from "@/lib/auth"
-import Error from "next/error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
