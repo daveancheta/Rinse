@@ -8,10 +8,14 @@ interface User {
 }
 
 interface AuthState {
+    loading: boolean,
     handleSignUp: (formData: User) => (void)
 }
 export const UseAuthStore = create<AuthState>((set) => ({
+    loading: false,
+
     handleSignUp: async (formData: User) => {
+        set({ loading: true })
         try {
             const res = await fetch("api/auth/signup", ({
                 method: "POSt",
@@ -26,9 +30,11 @@ export const UseAuthStore = create<AuthState>((set) => ({
             } else {
                 toast.error(response.message)
             }
-            
+
         } catch (error: any) {
             toast.error(error.message || "Something went wrong");
+        } finally {
+            set({ loading: false })
         }
     }
 }))
