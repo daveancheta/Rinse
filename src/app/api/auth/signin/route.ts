@@ -4,14 +4,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    const { email, password, name } = body;
+    const { email, password } = body;
 
     try {
-        await auth.api.signUpEmail({
+        await auth.api.signInEmail({
             body: {
                 email: email,
                 password: password,
-                name: name,
             }
         })
 
@@ -24,5 +23,5 @@ export async function POST(req: NextRequest) {
                 error: error
             },
             { status: 400 })
-    }
+    }   
 }
