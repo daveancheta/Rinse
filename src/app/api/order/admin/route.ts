@@ -47,7 +47,7 @@ export async function GET() {
     try {
         const order = await db.select()
             .from(orders)
-            
+
         return NextResponse.json({
             success: true,
             order
