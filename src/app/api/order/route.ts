@@ -59,3 +59,20 @@ export async function DELETE(req: NextRequest) {
         }, { status: 400 })
     }
 }
+
+export async function GET() {
+    try {
+        const order = await db.select()
+            .from(orders)
+            
+        return NextResponse.json({
+            success: true,
+            order
+        }, { status: 200 })
+    } catch (error) {
+        console.log(error)
+        return NextResponse.json({
+            success: false
+        }, { status: 400 })
+    }
+}
