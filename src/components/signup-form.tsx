@@ -107,11 +107,11 @@ export function SignupForm({
               </FieldDescription>
             </FieldGroup>
           </form>
-          <div className="bg-muted relative hidden md:block">
+          <div className="w-full h-full">
             <img
-              src="/placeholder.svg"
+              src="/rinse.png"
               alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              className="w-full h-full object-cover"
             />
           </div>
         </CardContent>
