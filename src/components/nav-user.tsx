@@ -35,7 +35,7 @@ import { SkeletonAvatar } from "./nav-user-skeleton"
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { user, handleGetSession, loading } = UseAuthStore();
+  const { user, handleGetSession, loading, handleLogout } = UseAuthStore();
 
   useEffect(() => {
     handleGetSession()
@@ -108,7 +108,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

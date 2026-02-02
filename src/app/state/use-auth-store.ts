@@ -1,3 +1,4 @@
+import { authClient } from "@/lib/auth-client"
 import { redirect } from "next/navigation"
 import { toast } from "sonner"
 import { create } from "zustand"
@@ -15,6 +16,7 @@ interface AuthState {
     handleSignUp: (formData: User) => (void),
     handleSignIn: (formData: User) => (void),
     handleGetSession: () => (void),
+    handleLogout: () => (void),
 }
 
 
@@ -85,5 +87,10 @@ export const UseAuthStore = create<AuthState>((set) => ({
         } finally {
             set({ loading: false });
         }
-    }
+    },
+
+    handleLogout: async () => {
+        await authClient.signOut();
+        window.location.reload();
+    },
 }))
