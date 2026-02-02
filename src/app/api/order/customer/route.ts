@@ -26,11 +26,13 @@ export async function POST(req: NextRequest) {
     }
 }
 
-export async function GET(req: NextRequest) {
+// Get customer order by authId
+export async function GET() {
     const session = await auth.api.getSession({
         headers: await headers()
     });
     const id = session?.user?.id;
+
     if (!id) return null;
 
     try {
