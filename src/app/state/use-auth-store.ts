@@ -78,7 +78,7 @@ export const UseAuthStore = create<AuthState>((set) => ({
         set({ loading: true });
 
         try {
-            const res = await fetch("/api/session");
+            const res = await fetch("/api/auth/session");
             const data = await res.json();
 
             set({ user: data.session?.user || null });
@@ -90,7 +90,17 @@ export const UseAuthStore = create<AuthState>((set) => ({
     },
 
     handleLogout: async () => {
-        await authClient.signOut();
-        window.location.reload();
+        try {
+            await fetch("/api/auth/signout", {
+                method: "POST",
+                credentials: "include",
+            });
+            
+            set({ user: null })
+
+            window.location.reload()
+        } catch (error) {
+            console.log(error)
+        }
     },
 }))
