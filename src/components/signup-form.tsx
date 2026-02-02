@@ -107,7 +107,7 @@ export function SignupForm({
               </FieldDescription>
             </FieldGroup>
           </form>
-          <div className="w-full h-full">
+          <div className="w-full h-full hidden md:block">
             <img
               src="/rinse.png"
               alt="Image"
