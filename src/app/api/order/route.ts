@@ -42,3 +42,20 @@ export async function PATCH(req: NextRequest) {
         }, { status: 400 })
     }
 }
+
+export async function DELETE(req: NextRequest) {
+    const body = await req.json();
+    const { id } = body;
+
+    try {
+        await db.delete(orders).where(eq(orders.id, id))
+        return NextResponse.json({
+            success: true
+        }, { status: 200 })
+    } catch (error) {
+        console.log(error)
+        return NextResponse.json({
+            success: false
+        }, { status: 400 })
+    }
+}
