@@ -32,7 +32,7 @@ const data = {
     },
     {
       title: "Orders",
-      url: "/orders",
+      url: "#",
       icon: Package, // or ShoppingBag, ClipboardList
       items: [
         {
