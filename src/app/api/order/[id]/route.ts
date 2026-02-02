@@ -6,10 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     try {
-        const order = await db.select({
-            id: orders.id,
-            status: orders.status
-        })
+        const order = await db.select()
             .from(orders)
             .where(eq(orders.id, id));
 
