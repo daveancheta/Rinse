@@ -73,13 +73,17 @@ export const UseAuthStore = create<AuthState>((set) => ({
     },
 
     handleGetSession: async () => {
+        set({ loading: true });
+
         try {
             const res = await fetch("/api/session");
             const data = await res.json();
 
-            set({ user: data.session?.user || null })
+            set({ user: data.session?.user || null });
         } catch (error) {
             console.log(error)
+        } finally {
+            set({ loading: false });
         }
     }
 }))

@@ -31,16 +31,15 @@ import {
 } from "@/components/ui/sidebar"
 import { UseAuthStore } from "@/app/state/use-auth-store"
 import { useEffect } from "react"
+import { SkeletonAvatar } from "./nav-user-skeleton"
 
 export function NavUser() {
-  const { isMobile } = useSidebar()
-  const { user, handleGetSession } = UseAuthStore()
+  const { isMobile } = useSidebar();
+  const { user, handleGetSession, loading } = UseAuthStore();
 
   useEffect(() => {
     handleGetSession()
   }, [handleGetSession])
-
-  if (!user) return <p>Please login</p>;
 
   return (
     <SidebarMenu>
@@ -51,13 +50,17 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
-              </div>
+              {loading ?
+                <SkeletonAvatar /> :
+                <>
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium">{user?.name}</span>
+                    <span className="truncate text-xs">{user?.email}</span>
+                  </div>
+                </>}
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -69,13 +72,17 @@ export function NavUser() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                </div>
+                {loading ?
+                <SkeletonAvatar /> :
+                <>
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium">{user?.name}</span>
+                    <span className="truncate text-xs">{user?.email}</span>
+                  </div>
+                </>}
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
