@@ -1,6 +1,6 @@
 "use server";
 
-import { orders } from "@/db/schema";
+import { orders, user } from "@/db/schema";
 import db from "@/index";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
@@ -49,6 +49,7 @@ export async function GET() {
     try {
         const order = await db.select()
             .from(orders)
+            .innerJoin(user, eq(orders.userId, user.id))
 
         return NextResponse.json({
             success: true,
