@@ -7,7 +7,7 @@ interface Orders {
     washLevel: string,
     paymentStatus: string,
     createdAt: string,
-    updaatedAt: string,
+    updatedAt: string,
 }
 
 interface Users {
@@ -19,7 +19,7 @@ interface Users {
     address: string,
     image: null,
     createdAt: string,
-    updaatedAt: string,
+    updatedAt: string,
 }
 
 interface Order {
@@ -34,7 +34,7 @@ interface OrderState {
     handleUpdateStatus: (orderId: string, status: string) => (void)
 }
 
-export const UseOrderStore = create<OrderState>((set) => ({
+export const UseOrderStore = create<OrderState>((set, get) => ({
     loading: false,
     orders: [],
 
@@ -51,12 +51,24 @@ export const UseOrderStore = create<OrderState>((set) => ({
     },
 
     handleUpdateStatus: async (id: string, status: string) => {
+        const previousOrders = get().orders
+
+        set({
+            orders: previousOrders.map((order) =>
+                order.orders.id === id
+                    ? { ...order, orders: { ...order.orders, paymentStatus: status } }
+                    : order)
+        });
+        
         try {
-            await fetch("/api/order/admin/payment", {
+            const result = await fetch("/api/order/admin/payment", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, status })
             })
+
+            const res = await result.json()
+
         } catch (error) {
             console.log(error)
         }
