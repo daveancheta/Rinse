@@ -1,7 +1,6 @@
 "use client"
 import { UseOrderStore } from '@/app/state/use-order-store'
 import Sidebar from '@/components/sidebar-provider'
-import { useInitials } from '@/hooks/use-initials'
 import { useEffect, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import {
@@ -22,21 +21,12 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Check, MoreHorizontalIcon } from "lucide-react"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { MoreHorizontalIcon } from "lucide-react"
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 function page() {
-    const { handleGetPickUpOrder, orders } = UseOrderStore();
+    const { handleGetPickUpOrder, orders, handleUpdateStatus } = UseOrderStore();
     const selectRef = useRef<HTMLSelectElement | any>(null);
 
     useEffect(() => {
@@ -65,7 +55,7 @@ function page() {
                                     <DropdownMenuTrigger asChild>
                                         <Badge onClick={() => selectRef.current?.click()}
                                             variant="outline"
-                                            className='flex flex-row items-center cursor-pointer'>
+                                            className='flex flex-row items-center justify-start cursor-pointer'>
                                             <div className={cn('w-2 h-2 rounded-full',
                                                 order.orders.paymentStatus === "pending" ? "bg-yellow-500" :
                                                     order.orders.paymentStatus === "paid" ? "bg-green-500" :
@@ -79,17 +69,20 @@ function page() {
                                         <DropdownMenuGroup>
                                             <DropdownMenuLabel>Payment Status</DropdownMenuLabel>
                                             <DropdownMenuCheckboxItem
+                                            onClick={() => handleUpdateStatus(order.orders.id, "pending")}
                                             >
                                                 <div className='w-2 h-2 bg-yellow-500 rounded-full'>
 
                                                 </div> Pending
                                             </DropdownMenuCheckboxItem>
                                             <DropdownMenuCheckboxItem
+                                            onClick={() => handleUpdateStatus(order.orders.id, "paid")}
                                             >
                                                 <div className='w-2 h-2 bg-green-500 rounded-full'></div>
                                                 Paid
                                             </DropdownMenuCheckboxItem>
                                             <DropdownMenuCheckboxItem
+                                            onClick={() => handleUpdateStatus(order.orders.id, "refund")}
                                             >
                                                 <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
                                                 Refund

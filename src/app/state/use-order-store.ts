@@ -31,6 +31,7 @@ interface OrderState {
     loading: boolean,
     orders: Order[],
     handleGetPickUpOrder: () => (void)
+    handleUpdateStatus: (orderId: string, status: string) => (void)
 }
 
 export const UseOrderStore = create<OrderState>((set) => ({
@@ -46,6 +47,18 @@ export const UseOrderStore = create<OrderState>((set) => ({
             set({ orders: data.order })
         } catch (error) {
             console.log(error);
+        }
+    },
+
+    handleUpdateStatus: async (id: string, status: string) => {
+        try {
+            await fetch("/api/order/admin/payment", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, status })
+            })
+        } catch (error) {
+            console.log(error)
         }
     }
 }))
