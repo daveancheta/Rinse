@@ -34,7 +34,12 @@ export async function GET() {
     });
     const id = session?.user?.id;
 
-    if (!id) return null;
+    if (!id) {
+        return NextResponse.json({
+            success: false,
+            message: "Unauthorized"
+        }, { status: 400 });
+    };
 
     try {
         const order = await db.select()
