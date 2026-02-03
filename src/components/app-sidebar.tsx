@@ -31,21 +31,13 @@ const data = {
       icon: User,
     },
     {
-      title: "Orders",
+      title: "Order",
       url: "#",
       icon: Package, // or ShoppingBag, ClipboardList
       items: [
         {
-          title: "To Pickup",
-          url: "/orders/pickup",
-        },
-        {
-          title: "Washing",
-          url: "/orders/washing",
-        },
-        {
-          title: "To Deliver",
-          url: "/orders/deliver",
+          title: "Orders",
+          url: "/orders/orders",
         },
         {
           title: "Done",
