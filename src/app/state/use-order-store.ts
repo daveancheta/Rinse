@@ -33,6 +33,7 @@ interface OrderState {
     handleGetPickUpOrder: () => (void),
     handleUpdatePaymentStatus: (id: string, status: string) => (void),
     handleUpdateOrderStatus: (id: string, status: string) => (void),
+    handleDeleteOrder: (id: string) => (void),
 }
 
 export const UseOrderStore = create<OrderState>((set, get) => ({
@@ -65,7 +66,7 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
             await fetch("/api/order/admin/payment", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id, status })
+                body: JSON.stringify({ id, status }),
             })
         } catch (error) {
             console.log(error)
@@ -73,7 +74,7 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
     },
 
     handleUpdateOrderStatus: async (id: string, status: string) => {
-        const previousOrders = get().orders
+        const previousOrders = get().orders;
 
         set({
             orders: previousOrders.map((order) =>
@@ -86,7 +87,25 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
             await fetch("/api/order/admin/order", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id, status })
+                body: JSON.stringify({ id, status }),
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    handleDeleteOrder: async (id: string) => {
+        const previousOrders = get().orders
+
+        set({
+            orders: previousOrders.filter((order) => order.orders.id !== id)
+        })
+
+        try {
+            await fetch("/api/order/admin", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id }),
             })
         } catch (error) {
             console.log(error)

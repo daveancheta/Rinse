@@ -26,8 +26,9 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 function page() {
-    const { handleGetPickUpOrder, orders, 
-        handleUpdatePaymentStatus, handleUpdateOrderStatus } = UseOrderStore();
+    const { handleGetPickUpOrder, orders,
+        handleUpdatePaymentStatus, handleUpdateOrderStatus,
+        handleDeleteOrder } = UseOrderStore();
     const selectRef = useRef<HTMLSelectElement | any>(null);
 
     useEffect(() => {
@@ -70,20 +71,20 @@ function page() {
                                         <DropdownMenuGroup>
                                             <DropdownMenuLabel>Payment Status</DropdownMenuLabel>
                                             <DropdownMenuCheckboxItem
-                                            onClick={() => handleUpdatePaymentStatus(order.orders.id, "pending")}
+                                                onClick={() => handleUpdatePaymentStatus(order.orders.id, "pending")}
                                             >
                                                 <div className='w-2 h-2 bg-yellow-500 rounded-full'>
 
                                                 </div> Pending
                                             </DropdownMenuCheckboxItem>
                                             <DropdownMenuCheckboxItem
-                                            onClick={() => handleUpdatePaymentStatus(order.orders.id, "paid")}
+                                                onClick={() => handleUpdatePaymentStatus(order.orders.id, "paid")}
                                             >
                                                 <div className='w-2 h-2 bg-green-500 rounded-full'></div>
                                                 Paid
                                             </DropdownMenuCheckboxItem>
                                             <DropdownMenuCheckboxItem
-                                            onClick={() => handleUpdatePaymentStatus(order.orders.id, "refund")}
+                                                onClick={() => handleUpdatePaymentStatus(order.orders.id, "refund")}
                                             >
                                                 <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
                                                 Refund
@@ -111,19 +112,19 @@ function page() {
                                         <DropdownMenuGroup>
                                             <DropdownMenuLabel>Payment Status</DropdownMenuLabel>
                                             <DropdownMenuCheckboxItem
-                                            onClick={() => handleUpdateOrderStatus(order.orders.id, "pickup")}
+                                                onClick={() => handleUpdateOrderStatus(order.orders.id, "pickup")}
                                             >
-                                                <div className='w-2 h-2 bg-yellow-500 rounded-full'></div> 
+                                                <div className='w-2 h-2 bg-yellow-500 rounded-full'></div>
                                                 To Pickup
                                             </DropdownMenuCheckboxItem>
                                             <DropdownMenuCheckboxItem
-                                            onClick={() => handleUpdateOrderStatus(order.orders.id, "deliver")}
+                                                onClick={() => handleUpdateOrderStatus(order.orders.id, "deliver")}
                                             >
                                                 <div className='w-2 h-2 bg-green-500 rounded-full'></div>
                                                 To Deliver
                                             </DropdownMenuCheckboxItem>
                                             <DropdownMenuCheckboxItem
-                                            onClick={() => handleUpdateOrderStatus(order.orders.id, "washing")}
+                                                onClick={() => handleUpdateOrderStatus(order.orders.id, "washing")}
                                             >
                                                 <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
                                                 Washing
@@ -141,10 +142,8 @@ function page() {
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
-                                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                                        <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem variant="destructive">
+                                        <DropdownMenuItem variant="destructive"
+                                            onClick={() => handleDeleteOrder(order.orders.id)}>
                                             Delete
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
