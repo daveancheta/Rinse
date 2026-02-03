@@ -73,6 +73,15 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
     },
 
     handleUpdateOrderStatus: async (id: string, status: string) => {
+        const previousOrders = get().orders
+
+        set({
+            orders: previousOrders.map((order) =>
+                order.orders.id === id
+                    ? { ...order, orders: { ...order.orders, status: status } }
+                    : order)
+        })
+
         try {
             await fetch("/api/order/admin/order", {
                 method: "PATCH",
