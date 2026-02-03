@@ -79,13 +79,14 @@ export const orders = pgTable(
   "orders",
   {
     id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     status: text("status").notNull(),
     washLevel: text("wash_level").notNull(),
+    paymentStatus: text("payment_status").default("pending").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()

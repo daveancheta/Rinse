@@ -2,7 +2,7 @@
 import { UseOrderStore } from '@/app/state/use-order-store'
 import Sidebar from '@/components/sidebar-provider'
 import { useInitials } from '@/hooks/use-initials'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -10,6 +10,9 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    DropdownMenuCheckboxItem,
+    DropdownMenuGroup,
+    DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
 import {
     Table,
@@ -19,11 +22,22 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { MoreHorizontalIcon } from "lucide-react"
+import { Check, MoreHorizontalIcon } from "lucide-react"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
 function page() {
     const { handleGetPickUpOrder, orders } = UseOrderStore();
-    const getInitials = useInitials()
+    const selectRef = useRef<HTMLSelectElement | any>(null);
 
     useEffect(() => {
         handleGetPickUpOrder()
@@ -36,7 +50,8 @@ function page() {
                     <TableRow>
                         <TableHead>Name</TableHead>
                         <TableHead>Wash Level</TableHead>
-                        <TableHead>Status</TableHead>
+                        <TableHead>Payment Status</TableHead>
+                        <TableHead>Order Status</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -45,6 +60,44 @@ function page() {
                         <TableRow key={order.orders.id}>
                             <TableCell className="font-medium">{order.user.name}</TableCell>
                             <TableCell className='capitalize'>{order.orders.washLevel}</TableCell>
+                            <TableCell className='capitalize'>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Badge onClick={() => selectRef.current?.click()}
+                                            variant="outline"
+                                            className='flex flex-row items-center cursor-pointer'>
+                                            <div className={cn('w-2 h-2 rounded-full',
+                                                order.orders.paymentStatus === "pending" ? "bg-yellow-500" :
+                                                    order.orders.paymentStatus === "paid" ? "bg-green-500" :
+                                                        'bg-blue-500')}>
+
+                                            </div>
+                                            {order.orders.paymentStatus}
+                                        </Badge>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuLabel>Payment Status</DropdownMenuLabel>
+                                            <DropdownMenuCheckboxItem
+                                            >
+                                                <div className='w-2 h-2 bg-yellow-500 rounded-full'>
+
+                                                </div> Pending
+                                            </DropdownMenuCheckboxItem>
+                                            <DropdownMenuCheckboxItem
+                                            >
+                                                <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                                                Paid
+                                            </DropdownMenuCheckboxItem>
+                                            <DropdownMenuCheckboxItem
+                                            >
+                                                <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
+                                                Refund
+                                            </DropdownMenuCheckboxItem>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </TableCell>
                             <TableCell className='capitalize'>{order.orders.status}</TableCell>
                             <TableCell className="text-right">
                                 <DropdownMenu>

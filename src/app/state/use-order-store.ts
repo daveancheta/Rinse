@@ -5,6 +5,7 @@ interface Orders {
     userId: string,
     status: string,
     washLevel: string,
+    paymentStatus: string,
     createdAt: string,
     updaatedAt: string,
 }
