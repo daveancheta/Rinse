@@ -9,11 +9,12 @@ import { NextRequest, NextResponse } from "next/server";
 // Customer can place order
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    const { userId, status } = body;
+    const { userId, status, wash_level } = body;
     try {
         await db.insert(orders).values({
             userId: userId,
-            status: status
+            status: status,
+            washLevel: wash_level,
         })
 
         return NextResponse.json({

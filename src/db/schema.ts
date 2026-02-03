@@ -85,6 +85,7 @@ export const orders = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     status: text("status").notNull(),
+    washLevel: text("wash_level").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
