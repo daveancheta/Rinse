@@ -10,6 +10,18 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
     const body = await req.json();
     const { userId, status, wash_level } = body;
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+    const id = session?.user?.id;
+
+    if (!id) {
+        return NextResponse.json({
+            success: false,
+            message: "Unauthorized"
+        }, { status: 400 });
+    };
+
     try {
         await db.insert(orders).values({
             userId: userId,
