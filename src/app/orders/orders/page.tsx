@@ -101,8 +101,8 @@ function page() {
                                             className='flex flex-row items-center justify-start cursor-pointer'>
                                             <div className={cn('w-2 h-2 rounded-full',
                                                 order.orders.status === "pickup" ? "bg-yellow-500" :
-                                                    order.orders.status === "deliver" ? "bg-green-500" :
-                                                        'bg-blue-500')}>
+                                                    order.orders.status === "deliver" ? "bg-orange-500" :
+                                                        order.orders.status === "washing" ? "bg-blue-500" : "bg-green-500")}>
 
                                             </div>
                                             {order.orders.status}
@@ -118,16 +118,22 @@ function page() {
                                                 To Pickup
                                             </DropdownMenuCheckboxItem>
                                             <DropdownMenuCheckboxItem
-                                                onClick={() => handleUpdateOrderStatus(order.orders.id, "deliver")}
-                                            >
-                                                <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                                                To Deliver
-                                            </DropdownMenuCheckboxItem>
-                                            <DropdownMenuCheckboxItem
                                                 onClick={() => handleUpdateOrderStatus(order.orders.id, "washing")}
                                             >
                                                 <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
                                                 Washing
+                                            </DropdownMenuCheckboxItem>
+                                             <DropdownMenuCheckboxItem
+                                                onClick={() => handleUpdateOrderStatus(order.orders.id, "deliver")}
+                                            >
+                                                <div className='w-2 h-2 bg-orange-500 rounded-full'></div>
+                                                To Deliver
+                                            </DropdownMenuCheckboxItem>
+                                             <DropdownMenuCheckboxItem
+                                                onClick={() => handleUpdateOrderStatus(order.orders.id, "done")}
+                                            >
+                                                <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                                                Done
                                             </DropdownMenuCheckboxItem>
                                         </DropdownMenuGroup>
                                     </DropdownMenuContent>
