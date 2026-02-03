@@ -1,3 +1,4 @@
+"use server";
 import { orders } from "@/db/schema";
 import db from "@/index";
 import { auth } from "@/lib/auth";
