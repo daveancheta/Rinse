@@ -26,7 +26,8 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 function page() {
-    const { handleGetPickUpOrder, orders, handleUpdateStatus } = UseOrderStore();
+    const { handleGetPickUpOrder, orders, 
+        handleUpdatePaymentStatus, handleUpdateOrderStatus } = UseOrderStore();
     const selectRef = useRef<HTMLSelectElement | any>(null);
 
     useEffect(() => {
@@ -69,20 +70,20 @@ function page() {
                                         <DropdownMenuGroup>
                                             <DropdownMenuLabel>Payment Status</DropdownMenuLabel>
                                             <DropdownMenuCheckboxItem
-                                            onClick={() => handleUpdateStatus(order.orders.id, "pending")}
+                                            onClick={() => handleUpdatePaymentStatus(order.orders.id, "pending")}
                                             >
                                                 <div className='w-2 h-2 bg-yellow-500 rounded-full'>
 
                                                 </div> Pending
                                             </DropdownMenuCheckboxItem>
                                             <DropdownMenuCheckboxItem
-                                            onClick={() => handleUpdateStatus(order.orders.id, "paid")}
+                                            onClick={() => handleUpdatePaymentStatus(order.orders.id, "paid")}
                                             >
                                                 <div className='w-2 h-2 bg-green-500 rounded-full'></div>
                                                 Paid
                                             </DropdownMenuCheckboxItem>
                                             <DropdownMenuCheckboxItem
-                                            onClick={() => handleUpdateStatus(order.orders.id, "refund")}
+                                            onClick={() => handleUpdatePaymentStatus(order.orders.id, "refund")}
                                             >
                                                 <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
                                                 Refund
@@ -91,7 +92,46 @@ function page() {
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>
-                            <TableCell className='capitalize'>{order.orders.status}</TableCell>
+                            <TableCell className='capitalize'>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Badge onClick={() => selectRef.current?.click()}
+                                            variant="outline"
+                                            className='flex flex-row items-center justify-start cursor-pointer'>
+                                            <div className={cn('w-2 h-2 rounded-full',
+                                                order.orders.status === "pickup" ? "bg-yellow-500" :
+                                                    order.orders.status === "deliver" ? "bg-green-500" :
+                                                        'bg-blue-500')}>
+
+                                            </div>
+                                            {order.orders.status}
+                                        </Badge>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuLabel>Payment Status</DropdownMenuLabel>
+                                            <DropdownMenuCheckboxItem
+                                            onClick={() => handleUpdateOrderStatus(order.orders.id, "pickup")}
+                                            >
+                                                <div className='w-2 h-2 bg-yellow-500 rounded-full'></div> 
+                                                To Pickup
+                                            </DropdownMenuCheckboxItem>
+                                            <DropdownMenuCheckboxItem
+                                            onClick={() => handleUpdateOrderStatus(order.orders.id, "deliver")}
+                                            >
+                                                <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                                                To Deliver
+                                            </DropdownMenuCheckboxItem>
+                                            <DropdownMenuCheckboxItem
+                                            onClick={() => handleUpdateOrderStatus(order.orders.id, "washing")}
+                                            >
+                                                <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
+                                                Washing
+                                            </DropdownMenuCheckboxItem>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </TableCell>
                             <TableCell className="text-right">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>

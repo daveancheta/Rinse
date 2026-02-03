@@ -30,8 +30,9 @@ interface Order {
 interface OrderState {
     loading: boolean,
     orders: Order[],
-    handleGetPickUpOrder: () => (void)
-    handleUpdateStatus: (orderId: string, status: string) => (void)
+    handleGetPickUpOrder: () => (void),
+    handleUpdatePaymentStatus: (id: string, status: string) => (void),
+    handleUpdateOrderStatus: (id: string, status: string) => (void),
 }
 
 export const UseOrderStore = create<OrderState>((set, get) => ({
@@ -50,7 +51,7 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
         }
     },
 
-    handleUpdateStatus: async (id: string, status: string) => {
+    handleUpdatePaymentStatus: async (id: string, status: string) => {
         const previousOrders = get().orders
 
         set({
@@ -59,18 +60,28 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
                     ? { ...order, orders: { ...order.orders, paymentStatus: status } }
                     : order)
         });
-        
+
         try {
-            const result = await fetch("/api/order/admin/payment", {
+            await fetch("/api/order/admin/payment", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, status })
             })
+        } catch (error) {
+            console.log(error)
+        }
+    },
 
-            const res = await result.json()
-
+    handleUpdateOrderStatus: async (id: string, status: string) => {
+        try {
+            await fetch("/api/order/admin/order", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, status })
+            })
         } catch (error) {
             console.log(error)
         }
     }
+
 }))
