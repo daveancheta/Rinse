@@ -82,6 +82,7 @@ function page() {
                 <TableHeader>
                     <TableRow>
                         <TableHead>Name</TableHead>
+                        <TableHead>Address</TableHead>
                         <TableHead>Wash Level</TableHead>
                         <TableHead>Payment Status</TableHead>
                         <TableHead>Order Status</TableHead>
@@ -93,6 +94,7 @@ function page() {
                         <TableRow key={order.orders.id}
                             className={cn(orderStatus === "all" || orderStatus === null ? "" : order.orders.status !== orderStatus && "hidden")}>
                             <TableCell className="font-medium">{order.user.name}</TableCell>
+                            <TableCell className='capitalize'>{order.user.address}</TableCell>
                             <TableCell className='capitalize'>{order.orders.washLevel}</TableCell>
                             <TableCell className='capitalize'>
                                 <DropdownMenu>
