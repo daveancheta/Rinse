@@ -1,12 +1,16 @@
-import { authClient } from "@/lib/auth-client"
-import { redirect } from "next/navigation"
 import { toast } from "sonner"
 import { create } from "zustand"
 
 interface User {
+    id: string,
+    name: string,
     email: string,
-    password: string,
-    name?: string
+    emailVerified: string,
+    isAdmin: string,
+    address: string,
+    image: null,
+    createdAt: string,
+    updatedAt: string,
 }
 
 interface AuthState {
@@ -82,7 +86,7 @@ export const UseAuthStore = create<AuthState>((set) => ({
             const res = await fetch("/api/auth/session");
             const data = await res.json();
 
-            set({ user: data.session?.user || null });
+            set({ user: data.session || null });
         } catch (error) {
             console.log(error)
         } finally {
