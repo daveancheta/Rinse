@@ -7,6 +7,7 @@ interface Orders {
     status: string,
     washLevel: string,
     paymentStatus: string,
+    address: string,
     createdAt: string,
     updatedAt: string,
 }
@@ -40,7 +41,8 @@ interface OrderState {
     handleUpdatePaymentStatus: (id: string, status: string) => (void),
     handleUpdateOrderStatus: (id: string, status: string) => (void),
     handleDeleteOrder: (id: string) => (void),
-    handlePostOrder: (formdata: PostOrder) => (void)
+    handlePostOrder: (formdata: PostOrder) => (void),
+    handleGetOrderByAuthId: () => (void),
 }
 
 export const UseOrderStore = create<OrderState>((set, get) => ({
@@ -141,6 +143,18 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
             console.log(error)
         } finally {
             set({ isLoadingOrder: false });
+        }
+    },
+
+    handleGetOrderByAuthId: async () => {
+        try {
+            const res = await fetch("/api/order/customer")
+
+            const data = await res.json();
+
+            set({ orders: data.order })
+        } catch (error) {
+
         }
     }
 

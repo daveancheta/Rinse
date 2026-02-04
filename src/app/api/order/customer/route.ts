@@ -2,14 +2,14 @@
 import { orders, user } from "@/db/schema";
 import db from "@/index";
 import { auth } from "@/lib/auth";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 // Customer can place order
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    const { userAddress, washLevel,  } = body;
+    const { userAddress, washLevel, } = body;
     const session = await auth.api.getSession({
         headers: await headers()
     });
@@ -82,8 +82,13 @@ export async function GET() {
         const order = await db.select()
             .from(orders)
             .where(eq(orders.userId, id))
+            .innerJoin(user, eq(orders.userId, user.id))
+            .orderBy(desc(orders.createdAt))
 
-        return NextResponse.json({ success: true, order: order });
+        return NextResponse.json({
+            success: true,
+            order
+        }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ success: false }, { status: 400 });
     }
