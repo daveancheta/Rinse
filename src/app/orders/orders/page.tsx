@@ -47,6 +47,7 @@ function page() {
 
     return (
         <Sidebar>
+            <div className='flex flex-col gap-4 items-end'>
             <Select onValueChange={(value) => setOrderStatus(value)}>
                 <SelectTrigger className="w-full max-w-35">
                     <SelectValue placeholder="Order Status" />
@@ -200,6 +201,7 @@ function page() {
                     )}
                 </TableBody>
             </Table>
+            </div>
         </Sidebar>
     )
 }
