@@ -64,6 +64,7 @@ export const UseAuthStore = create<AuthState>((set) => ({
 
             if (!result.success) {
                 set({ isLoggedIn: false });
+                toast.error(result.message)
             } else {
                 set({ isLoggedIn: true });
             }
@@ -95,7 +96,7 @@ export const UseAuthStore = create<AuthState>((set) => ({
                 method: "POST",
                 credentials: "include",
             });
-            
+
             set({ user: null })
 
             window.location.reload()
