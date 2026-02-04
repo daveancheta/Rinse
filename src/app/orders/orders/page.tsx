@@ -1,18 +1,27 @@
 "use client"
 import { UseOrderStore } from '@/app/state/use-order-store'
 import Sidebar from '@/components/sidebar-provider'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
     DropdownMenuCheckboxItem,
     DropdownMenuGroup,
     DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+
 import {
     Table,
     TableBody,
@@ -30,6 +39,7 @@ function page() {
         handleUpdatePaymentStatus, handleUpdateOrderStatus,
         handleDeleteOrder } = UseOrderStore();
     const selectRef = useRef<HTMLSelectElement | any>(null);
+    const [orderStatus, setOrderStatus] = useState<string | null>(null)
 
     useEffect(() => {
         handleGetPickUpOrder()
@@ -37,6 +47,36 @@ function page() {
 
     return (
         <Sidebar>
+            <Select onValueChange={(value) => setOrderStatus(value)}>
+                <SelectTrigger className="w-full max-w-35">
+                    <SelectValue placeholder="Order Status" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        <SelectLabel>Order Status</SelectLabel>
+                        <SelectItem value="all" >
+                            <div className='w-2 h-2 bg-black dark:bg-white rounded-full'></div>
+                            All
+                        </SelectItem>
+                        <SelectItem value="pickup" >
+                            <div className='w-2 h-2 bg-yellow-500 rounded-full'></div>
+                            To Pickup
+                        </SelectItem>
+                        <SelectItem value="washing">
+                            <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
+                            Washing
+                        </SelectItem>
+                        <SelectItem value="deliver">
+                            <div className='w-2 h-2 bg-orange-500 rounded-full'></div>
+                            To Deliver
+                        </SelectItem>
+                        <SelectItem value="done">
+                            <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                            Done
+                        </SelectItem>
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -49,7 +89,8 @@ function page() {
                 </TableHeader>
                 <TableBody>
                     {orders.map((order) =>
-                        <TableRow key={order.orders.id}>
+                        <TableRow key={order.orders.id}
+                            className={cn(orderStatus === "all" || orderStatus === null ? "" : order.orders.status !== orderStatus && "hidden")}>
                             <TableCell className="font-medium">{order.user.name}</TableCell>
                             <TableCell className='capitalize'>{order.orders.washLevel}</TableCell>
                             <TableCell className='capitalize'>
@@ -110,7 +151,7 @@ function page() {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
                                         <DropdownMenuGroup>
-                                            <DropdownMenuLabel>Payment Status</DropdownMenuLabel>
+                                            <DropdownMenuLabel>Order Status</DropdownMenuLabel>
                                             <DropdownMenuCheckboxItem
                                                 onClick={() => handleUpdateOrderStatus(order.orders.id, "pickup")}
                                             >
@@ -123,13 +164,13 @@ function page() {
                                                 <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
                                                 Washing
                                             </DropdownMenuCheckboxItem>
-                                             <DropdownMenuCheckboxItem
+                                            <DropdownMenuCheckboxItem
                                                 onClick={() => handleUpdateOrderStatus(order.orders.id, "deliver")}
                                             >
                                                 <div className='w-2 h-2 bg-orange-500 rounded-full'></div>
                                                 To Deliver
                                             </DropdownMenuCheckboxItem>
-                                             <DropdownMenuCheckboxItem
+                                            <DropdownMenuCheckboxItem
                                                 onClick={() => handleUpdateOrderStatus(order.orders.id, "done")}
                                             >
                                                 <div className='w-2 h-2 bg-green-500 rounded-full'></div>
