@@ -1,6 +1,11 @@
 import { toast } from "sonner"
 import { create } from "zustand"
 
+interface AuthUser {
+    email: string,
+    password: string
+}
+
 interface User {
     id: string,
     name: string,
@@ -13,12 +18,13 @@ interface User {
     updatedAt: string,
 }
 
+
 interface AuthState {
     loading: boolean,
     isLoggedIn: boolean,
     user: User | null,
-    handleSignUp: (formData: User) => (void),
-    handleSignIn: (formData: User) => (void),
+    handleSignUp: (formData: AuthUser) => (void),
+    handleSignIn: (formData: AuthUser) => (void),
     handleGetSession: () => (void),
     handleLogout: () => (void),
 }
@@ -29,7 +35,7 @@ export const UseAuthStore = create<AuthState>((set) => ({
     isLoggedIn: false,
     user: null,
 
-    handleSignUp: async (formData: User) => {
+    handleSignUp: async (formData: AuthUser) => {
         set({ loading: true })
 
         try {
@@ -54,7 +60,7 @@ export const UseAuthStore = create<AuthState>((set) => ({
         }
     },
 
-    handleSignIn: async (formData: User) => {
+    handleSignIn: async (formData: AuthUser) => {
         set({ loading: true })
 
         try {
