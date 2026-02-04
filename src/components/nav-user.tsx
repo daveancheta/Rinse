@@ -108,7 +108,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuItem onClick={handleLogout} disabled={isLoadingAuth}>
               <LogOut />
               Log out
             </DropdownMenuItem>
