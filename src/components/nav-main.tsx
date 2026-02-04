@@ -18,6 +18,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { UseAuthStore } from "@/app/state/use-auth-store"
 
 export function NavMain({
   items,
@@ -33,6 +34,7 @@ export function NavMain({
     }[]
   }[]
 }) {
+  const { isLoadingAuth } = UseAuthStore()
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>

@@ -35,7 +35,7 @@ import { SkeletonAvatar } from "./nav-user-skeleton"
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { user, handleGetSession, loading, handleLogout } = UseAuthStore();
+  const { user, handleGetSession, isLoadingAuth, handleLogout } = UseAuthStore();
 
   useEffect(() => {
     handleGetSession()
@@ -50,7 +50,7 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              {loading ?
+              {isLoadingAuth ?
                 <SkeletonAvatar /> :
                 <>
                   <Avatar className="h-8 w-8 rounded-lg">
@@ -72,7 +72,7 @@ export function NavUser() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                {loading ?
+                {isLoadingAuth ?
                 <SkeletonAvatar /> :
                 <>
                   <Avatar className="h-8 w-8 rounded-lg">

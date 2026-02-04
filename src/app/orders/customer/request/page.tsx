@@ -31,7 +31,7 @@ import {
 
 
 function page() {
-    const { user, handleGetSession, loading } = UseAuthStore();
+    const { user, handleGetSession, isLoadingAuth } = UseAuthStore();
     const { handlePostOrder } = UseOrderStore();
     const [check, setCheck] = useState<boolean>(false)
     const [formData, setFormData] = useState<string | any>({
@@ -53,7 +53,7 @@ function page() {
         <Sidebar>
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button variant="outline" disabled={loading}>Request Pickup</Button>
+                    <Button variant="outline" disabled={isLoadingAuth}>Request Pickup</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-sm">
                     <form onSubmit={request} className="space-y-4">

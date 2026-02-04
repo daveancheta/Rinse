@@ -20,7 +20,7 @@ interface User {
 
 
 interface AuthState {
-    loading: boolean,
+    isLoadingAuth: boolean,
     isLoggedIn: boolean,
     user: User | null,
     handleSignUp: (formData: AuthUser) => (void),
@@ -31,12 +31,12 @@ interface AuthState {
 
 
 export const UseAuthStore = create<AuthState>((set) => ({
-    loading: false,
+    isLoadingAuth: false,
     isLoggedIn: false,
     user: null,
 
     handleSignUp: async (formData: AuthUser) => {
-        set({ loading: true })
+        set({ isLoadingAuth: true })
 
         try {
             const res = await fetch("api/auth/signup", ({
@@ -56,12 +56,12 @@ export const UseAuthStore = create<AuthState>((set) => ({
         } catch (error: any) {
             toast.error(error.message || "Something went wrong");
         } finally {
-            set({ loading: false });
+            set({ isLoadingAuth: false });
         }
     },
 
     handleSignIn: async (formData: AuthUser) => {
-        set({ loading: true })
+        set({ isLoadingAuth: true })
 
         try {
             const res = await fetch("/api/auth/signin", {
@@ -81,12 +81,12 @@ export const UseAuthStore = create<AuthState>((set) => ({
         } catch (error: any) {
             toast.error(error.message);
         } finally {
-            set({ loading: false });
+            set({ isLoadingAuth: false });
         }
     },
 
     handleGetSession: async () => {
-        set({ loading: true });
+        set({ isLoadingAuth: true });
 
         try {
             const res = await fetch("/api/auth/session");
@@ -96,7 +96,7 @@ export const UseAuthStore = create<AuthState>((set) => ({
         } catch (error) {
             console.log(error)
         } finally {
-            set({ loading: false });
+            set({ isLoadingAuth: false });
         }
     },
 
