@@ -1,3 +1,4 @@
+import { toast } from "sonner"
 import { create } from "zustand"
 
 interface Orders {
@@ -27,6 +28,11 @@ interface Order {
     orders: Orders
 }
 
+interface PostOrder {
+    userAddress: string,
+    washLevel: string
+}
+
 interface OrderState {
     loading: boolean,
     orders: Order[],
@@ -34,6 +40,7 @@ interface OrderState {
     handleUpdatePaymentStatus: (id: string, status: string) => (void),
     handleUpdateOrderStatus: (id: string, status: string) => (void),
     handleDeleteOrder: (id: string) => (void),
+    handlePostOrder: (formdata: PostOrder) => (void)
 }
 
 export const UseOrderStore = create<OrderState>((set, get) => ({
@@ -107,6 +114,26 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id }),
             })
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    handlePostOrder: async (formData: PostOrder) => {
+        try {
+            const result = await fetch("/api/order/customer", {
+                method: "POST",
+                headers: { "Content-Type": "application/json"},
+                body: JSON.stringify(formData),
+            })
+
+            const res = await result.json();
+
+            if(!res.success) {
+                return toast.error(res.message)
+            } else {
+                return toast.success("Your laundry will be picked up in a minute!")
+            }
         } catch (error) {
             console.log(error)
         }

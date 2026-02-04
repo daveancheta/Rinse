@@ -87,6 +87,7 @@ export const orders = pgTable(
     status: text("status").notNull(),
     washLevel: text("wash_level").notNull(),
     paymentStatus: text("payment_status").default("pending").notNull(),
+    address: text("address").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()

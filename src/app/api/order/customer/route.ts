@@ -9,12 +9,18 @@ import { NextRequest, NextResponse } from "next/server";
 // Customer can place order
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    const { status, wash_level } = body;
+    const { userAddress, washLevel,  } = body;
     const session = await auth.api.getSession({
         headers: await headers()
     });
 
     try {
+        if (!washLevel || !userAddress) {
+            return NextResponse.json({
+                success: false,
+                message: "All fields are required."
+            }, { status: 400 })
+        }
         const id = session?.user?.id;
 
         if (!id) {
@@ -34,6 +40,7 @@ export async function POST(req: NextRequest) {
 
         if (!address?.address) {
             return NextResponse.json({
+                success: false,
                 message: "Please set an address before submitting your laundry for pickup."
             }, { status: 400 }
             )
@@ -41,8 +48,9 @@ export async function POST(req: NextRequest) {
 
         await db.insert(orders).values({
             userId: id,
-            status: status,
-            washLevel: wash_level,
+            status: "pickup",
+            washLevel: washLevel,
+            address: userAddress
         })
 
         return NextResponse.json({
