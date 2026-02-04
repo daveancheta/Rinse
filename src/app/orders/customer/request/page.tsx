@@ -28,11 +28,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { Loader2 } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 
 function page() {
     const { user, handleGetSession, isLoadingAuth } = UseAuthStore();
-    const { handlePostOrder } = UseOrderStore();
+    const { handlePostOrder, isLoadingOrder } = UseOrderStore();
     const [check, setCheck] = useState<boolean>(false)
     const [formData, setFormData] = useState<string | any>({
         userAddress: "",
@@ -104,13 +106,13 @@ function page() {
                                     setFormData({ ...formData, userAddress: "" })
                                     setFormData({ ...formData, washLevel: "" })
                                     setCheck(!check)
-                                }}>Cancel</Button>
+                                }} disabled={isLoadingOrder}>Cancel</Button>
                             </DialogClose>
                             <Button type="submit"
                                 disabled={
                                     !formData.userAddress.trim() ||
-                                    !formData.washLevel.trim()}>
-                                Save changes
+                                    !formData.washLevel.trim() || isLoadingOrder}>
+                                <Loader2 className={cn("animate-spin", !isLoadingOrder && "hidden")}/> Save changes
                             </Button>
                         </DialogFooter>
                     </form>

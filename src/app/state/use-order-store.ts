@@ -34,7 +34,7 @@ interface PostOrder {
 }
 
 interface OrderState {
-    loading: boolean,
+    isLoadingOrder: boolean,
     orders: Order[],
     handleGetPickUpOrder: () => (void),
     handleUpdatePaymentStatus: (id: string, status: string) => (void),
@@ -44,7 +44,7 @@ interface OrderState {
 }
 
 export const UseOrderStore = create<OrderState>((set, get) => ({
-    loading: false,
+    isLoadingOrder: false,
     orders: [],
 
     handleGetPickUpOrder: async () => {
@@ -120,22 +120,27 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
     },
 
     handlePostOrder: async (formData: PostOrder) => {
+        set({ isLoadingOrder: true });
+
         try {
             const result = await fetch("/api/order/customer", {
                 method: "POST",
-                headers: { "Content-Type": "application/json"},
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             })
 
             const res = await result.json();
 
-            if(!res.success) {
+            if (!res.success) {
                 return toast.error(res.message)
             } else {
                 return toast.success("Your laundry will be picked up in a minute!")
             }
+
         } catch (error) {
             console.log(error)
+        } finally {
+            set({ isLoadingOrder: false });
         }
     }
 
