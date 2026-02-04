@@ -31,7 +31,7 @@ import {
 
 
 function page() {
-    const { user, handleGetSession } = UseAuthStore();
+    const { user, handleGetSession, loading } = UseAuthStore();
     const { handlePostOrder } = UseOrderStore();
     const [check, setCheck] = useState<boolean>(false)
     const [formData, setFormData] = useState<string | any>({
@@ -53,7 +53,7 @@ function page() {
         <Sidebar>
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button variant="outline">Request Pickup</Button>
+                    <Button variant="outline" disabled={loading}>Request Pickup</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-sm">
                     <form onSubmit={request} className="space-y-4">
@@ -68,7 +68,8 @@ function page() {
                             <Field>
                                 <Label htmlFor="name-1">Address</Label>
                                 <Input id="Address" value={formData.userAddress}
-                                    onChange={(e) => setFormData({ ...formData, userAddress: e.target.value })} />
+                                    onChange={(e) => setFormData({ ...formData, userAddress: e.target.value })}
+                                    disabled={check} />
                                 <div className="flex flex-row items-center gap-2">
                                     <Checkbox id="terms-checkbox" name="terms-checkbox" checked={check}
                                         onCheckedChange={() => {
@@ -76,13 +77,13 @@ function page() {
                                                 setFormData({ ...formData, userAddress: "" })
                                             setCheck(!check)
                                         }} />
-                                    <Label htmlFor="terms-checkbox">Use your session address</Label>
+                                    <Label htmlFor="terms-checkbox">Use my current address.</Label>
                                 </div>
                             </Field>
 
                             <Field>
                                 <Label>Wash Level</Label>
-                                <Select onValueChange={(value) => setFormData({...formData, washLevel: value})}>
+                                <Select onValueChange={(value) => setFormData({ ...formData, washLevel: value })}>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Wash Level" />
                                     </SelectTrigger>
@@ -99,9 +100,18 @@ function page() {
                         </FieldGroup>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
+                                <Button variant="outline" onClick={() => {
+                                    setFormData({ ...formData, userAddress: "" })
+                                    setFormData({ ...formData, washLevel: "" })
+                                    setCheck(!check)
+                                }}>Cancel</Button>
                             </DialogClose>
-                            <Button type="submit">Save changes</Button>
+                            <Button type="submit"
+                                disabled={
+                                    !formData.userAddress.trim() ||
+                                    !formData.washLevel.trim()}>
+                                Save changes
+                            </Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>
