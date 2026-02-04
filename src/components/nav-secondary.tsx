@@ -8,6 +8,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { UseAuthStore } from "@/app/state/use-auth-store"
+import { NavSecondarySkeleton } from "./nav-secondary-skeleton"
 
 export function NavSecondary({
   items,
@@ -19,20 +21,27 @@ export function NavSecondary({
     icon: LucideIcon
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+  const { isLoadingAuth } = UseAuthStore()
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild size="sm">
-                <a href={item.url}>
-                  <item.icon />
-                  <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {isLoadingAuth ?
+            <>
+              <NavSecondarySkeleton />
+            </>
+            :
+            items.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild size="sm">
+                  <a href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))
+          }
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

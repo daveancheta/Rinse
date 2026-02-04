@@ -19,7 +19,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { UseAuthStore } from "@/app/state/use-auth-store"
-import { NavItemsSkeleton } from "./nav-main-skeleton"
+import { NavMainSkeleton } from "./nav-main-skeleton"
 
 export function NavMain({
   items,
@@ -40,11 +40,11 @@ export function NavMain({
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
-        {isLoadingAuth ? 
-        <>
-        <NavItemsSkeleton/>
-        </> 
-        :
+        {isLoadingAuth ?
+          <>
+            <NavMainSkeleton />
+          </>
+          :
           items.map((item) => (
             <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
               <SidebarMenuItem>
