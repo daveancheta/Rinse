@@ -52,11 +52,6 @@ function page() {
         handleGetSession()
     }, [handleGetSession])
 
-
-    if (!user?.isAdmin) {
-        notFound()
-    };
-
     return (
         <Sidebar>
             <div className='flex flex-col gap-4 items-end'>
