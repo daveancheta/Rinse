@@ -33,8 +33,11 @@ import {
 import { MoreHorizontalIcon } from "lucide-react"
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { UseAuthStore } from '@/app/state/use-auth-store'
+import { notFound } from 'next/navigation'
 
 function page() {
+    const { user, handleGetSession } = UseAuthStore()
     const { handleGetPickUpOrder, orders,
         handleUpdatePaymentStatus, handleUpdateOrderStatus,
         handleDeleteOrder } = UseOrderStore();
@@ -45,164 +48,173 @@ function page() {
         handleGetPickUpOrder()
     }, [handleGetPickUpOrder]);
 
+    useEffect(() => {
+        handleGetSession()
+    }, [handleGetSession])
+
+
+    if (!user?.isAdmin) {
+        notFound()
+    };
+
     return (
         <Sidebar>
             <div className='flex flex-col gap-4 items-end'>
-            <Select onValueChange={(value) => setOrderStatus(value)}>
-                <SelectTrigger className="w-full max-w-35">
-                    <SelectValue placeholder="Order Status" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectGroup>
-                        <SelectLabel>Order Status</SelectLabel>
-                        <SelectItem value="all" >
-                            <div className='w-2 h-2 bg-black dark:bg-white rounded-full'></div>
-                            All
-                        </SelectItem>
-                        <SelectItem value="pickup" >
-                            <div className='w-2 h-2 bg-yellow-500 rounded-full'></div>
-                            To Pickup
-                        </SelectItem>
-                        <SelectItem value="washing">
-                            <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                            Washing
-                        </SelectItem>
-                        <SelectItem value="deliver">
-                            <div className='w-2 h-2 bg-orange-500 rounded-full'></div>
-                            To Deliver
-                        </SelectItem>
-                        <SelectItem value="done">
-                            <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                            Done
-                        </SelectItem>
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Address</TableHead>
-                        <TableHead>Wash Level</TableHead>
-                        <TableHead>Payment Status</TableHead>
-                        <TableHead>Order Status</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {orders.map((order) =>
-                        <TableRow key={order.orders.id}
-                            className={cn(orderStatus === "all" || orderStatus === null ? "" : order.orders.status !== orderStatus && "hidden")}>
-                            <TableCell className="font-medium">{order.user.name}</TableCell>
-                            <TableCell className='capitalize'>{order.user.address}</TableCell>
-                            <TableCell className='capitalize'>{order.orders.washLevel}</TableCell>
-                            <TableCell className='capitalize'>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Badge onClick={() => selectRef.current?.click()}
-                                            variant="outline"
-                                            className='flex flex-row items-center justify-start cursor-pointer'>
-                                            <div className={cn('w-2 h-2 rounded-full',
-                                                order.orders.paymentStatus === "pending" ? "bg-yellow-500" :
-                                                    order.orders.paymentStatus === "paid" ? "bg-green-500" :
-                                                        'bg-blue-500')}>
-
-                                            </div>
-                                            {order.orders.paymentStatus}
-                                        </Badge>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuGroup>
-                                            <DropdownMenuLabel>Payment Status</DropdownMenuLabel>
-                                            <DropdownMenuCheckboxItem
-                                                onClick={() => handleUpdatePaymentStatus(order.orders.id, "pending")}
-                                            >
-                                                <div className='w-2 h-2 bg-yellow-500 rounded-full'>
-
-                                                </div> Pending
-                                            </DropdownMenuCheckboxItem>
-                                            <DropdownMenuCheckboxItem
-                                                onClick={() => handleUpdatePaymentStatus(order.orders.id, "paid")}
-                                            >
-                                                <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                                                Paid
-                                            </DropdownMenuCheckboxItem>
-                                            <DropdownMenuCheckboxItem
-                                                onClick={() => handleUpdatePaymentStatus(order.orders.id, "refund")}
-                                            >
-                                                <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                                                Refund
-                                            </DropdownMenuCheckboxItem>
-                                        </DropdownMenuGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </TableCell>
-                            <TableCell className='capitalize'>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Badge onClick={() => selectRef.current?.click()}
-                                            variant="outline"
-                                            className='flex flex-row items-center justify-start cursor-pointer'>
-                                            <div className={cn('w-2 h-2 rounded-full',
-                                                order.orders.status === "pickup" ? "bg-yellow-500" :
-                                                    order.orders.status === "deliver" ? "bg-orange-500" :
-                                                        order.orders.status === "washing" ? "bg-blue-500" : "bg-green-500")}>
-
-                                            </div>
-                                            {order.orders.status}
-                                        </Badge>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuGroup>
-                                            <DropdownMenuLabel>Order Status</DropdownMenuLabel>
-                                            <DropdownMenuCheckboxItem
-                                                onClick={() => handleUpdateOrderStatus(order.orders.id, "pickup")}
-                                            >
-                                                <div className='w-2 h-2 bg-yellow-500 rounded-full'></div>
-                                                To Pickup
-                                            </DropdownMenuCheckboxItem>
-                                            <DropdownMenuCheckboxItem
-                                                onClick={() => handleUpdateOrderStatus(order.orders.id, "washing")}
-                                            >
-                                                <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                                                Washing
-                                            </DropdownMenuCheckboxItem>
-                                            <DropdownMenuCheckboxItem
-                                                onClick={() => handleUpdateOrderStatus(order.orders.id, "deliver")}
-                                            >
-                                                <div className='w-2 h-2 bg-orange-500 rounded-full'></div>
-                                                To Deliver
-                                            </DropdownMenuCheckboxItem>
-                                            <DropdownMenuCheckboxItem
-                                                onClick={() => handleUpdateOrderStatus(order.orders.id, "done")}
-                                            >
-                                                <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                                                Done
-                                            </DropdownMenuCheckboxItem>
-                                        </DropdownMenuGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </TableCell>
-                            <TableCell className="text-right">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="size-8">
-                                            <MoreHorizontalIcon />
-                                            <span className="sr-only">Open menu</span>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem variant="destructive"
-                                            onClick={() => handleDeleteOrder(order.orders.id)}>
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </TableCell>
+                <Select onValueChange={(value) => setOrderStatus(value)}>
+                    <SelectTrigger className="w-full max-w-35">
+                        <SelectValue placeholder="Order Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>Order Status</SelectLabel>
+                            <SelectItem value="all" >
+                                <div className='w-2 h-2 bg-black dark:bg-white rounded-full'></div>
+                                All
+                            </SelectItem>
+                            <SelectItem value="pickup" >
+                                <div className='w-2 h-2 bg-yellow-500 rounded-full'></div>
+                                To Pickup
+                            </SelectItem>
+                            <SelectItem value="washing">
+                                <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
+                                Washing
+                            </SelectItem>
+                            <SelectItem value="deliver">
+                                <div className='w-2 h-2 bg-orange-500 rounded-full'></div>
+                                To Deliver
+                            </SelectItem>
+                            <SelectItem value="done">
+                                <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                                Done
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Address</TableHead>
+                            <TableHead>Wash Level</TableHead>
+                            <TableHead>Payment Status</TableHead>
+                            <TableHead>Order Status</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+                    </TableHeader>
+                    <TableBody>
+                        {orders.map((order) =>
+                            <TableRow key={order.orders.id}
+                                className={cn(orderStatus === "all" || orderStatus === null ? "" : order.orders.status !== orderStatus && "hidden")}>
+                                <TableCell className="font-medium">{order.user.name}</TableCell>
+                                <TableCell className='capitalize'>{order.user.address}</TableCell>
+                                <TableCell className='capitalize'>{order.orders.washLevel}</TableCell>
+                                <TableCell className='capitalize'>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Badge onClick={() => selectRef.current?.click()}
+                                                variant="outline"
+                                                className='flex flex-row items-center justify-start cursor-pointer'>
+                                                <div className={cn('w-2 h-2 rounded-full',
+                                                    order.orders.paymentStatus === "pending" ? "bg-yellow-500" :
+                                                        order.orders.paymentStatus === "paid" ? "bg-green-500" :
+                                                            'bg-blue-500')}>
+
+                                                </div>
+                                                {order.orders.paymentStatus}
+                                            </Badge>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuGroup>
+                                                <DropdownMenuLabel>Payment Status</DropdownMenuLabel>
+                                                <DropdownMenuCheckboxItem
+                                                    onClick={() => handleUpdatePaymentStatus(order.orders.id, "pending")}
+                                                >
+                                                    <div className='w-2 h-2 bg-yellow-500 rounded-full'>
+
+                                                    </div> Pending
+                                                </DropdownMenuCheckboxItem>
+                                                <DropdownMenuCheckboxItem
+                                                    onClick={() => handleUpdatePaymentStatus(order.orders.id, "paid")}
+                                                >
+                                                    <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                                                    Paid
+                                                </DropdownMenuCheckboxItem>
+                                                <DropdownMenuCheckboxItem
+                                                    onClick={() => handleUpdatePaymentStatus(order.orders.id, "refund")}
+                                                >
+                                                    <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
+                                                    Refund
+                                                </DropdownMenuCheckboxItem>
+                                            </DropdownMenuGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                                <TableCell className='capitalize'>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Badge onClick={() => selectRef.current?.click()}
+                                                variant="outline"
+                                                className='flex flex-row items-center justify-start cursor-pointer'>
+                                                <div className={cn('w-2 h-2 rounded-full',
+                                                    order.orders.status === "pickup" ? "bg-yellow-500" :
+                                                        order.orders.status === "deliver" ? "bg-orange-500" :
+                                                            order.orders.status === "washing" ? "bg-blue-500" : "bg-green-500")}>
+
+                                                </div>
+                                                {order.orders.status}
+                                            </Badge>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuGroup>
+                                                <DropdownMenuLabel>Order Status</DropdownMenuLabel>
+                                                <DropdownMenuCheckboxItem
+                                                    onClick={() => handleUpdateOrderStatus(order.orders.id, "pickup")}
+                                                >
+                                                    <div className='w-2 h-2 bg-yellow-500 rounded-full'></div>
+                                                    To Pickup
+                                                </DropdownMenuCheckboxItem>
+                                                <DropdownMenuCheckboxItem
+                                                    onClick={() => handleUpdateOrderStatus(order.orders.id, "washing")}
+                                                >
+                                                    <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
+                                                    Washing
+                                                </DropdownMenuCheckboxItem>
+                                                <DropdownMenuCheckboxItem
+                                                    onClick={() => handleUpdateOrderStatus(order.orders.id, "deliver")}
+                                                >
+                                                    <div className='w-2 h-2 bg-orange-500 rounded-full'></div>
+                                                    To Deliver
+                                                </DropdownMenuCheckboxItem>
+                                                <DropdownMenuCheckboxItem
+                                                    onClick={() => handleUpdateOrderStatus(order.orders.id, "done")}
+                                                >
+                                                    <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                                                    Done
+                                                </DropdownMenuCheckboxItem>
+                                            </DropdownMenuGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="icon" className="size-8">
+                                                <MoreHorizontalIcon />
+                                                <span className="sr-only">Open menu</span>
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem variant="destructive"
+                                                onClick={() => handleDeleteOrder(order.orders.id)}>
+                                                Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
             </div>
         </Sidebar>
     )

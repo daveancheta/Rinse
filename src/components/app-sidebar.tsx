@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import {
+  LayoutDashboard,
   LifeBuoy,
   Package,
   Send,
@@ -10,7 +11,6 @@ import {
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -22,45 +22,57 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-
-const data = {
-  navMain: [
-    {
-      title: "Users",
-      url: "#",
-      icon: User,
-    },
-    {
-      title: "Order",
-      url: "#",
-      icon: Package, // or ShoppingBag, ClipboardList
-      items: [
-        {
-          title: "Orders",
-          url: "/orders/orders",
-        },
-        {
-          title: "Done",
-          url: "/orders/done",
-        },
-      ],
-    }
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-}
+import { UseAuthStore } from "@/app/state/use-auth-store"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user, handleGetSession } = UseAuthStore();
+
+  React.useEffect(() => {
+    handleGetSession()
+  }, [handleGetSession]);
+
+  const data = {
+    navMain: [
+      {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: LayoutDashboard,
+      },
+      ...(user?.isAdmin ? [
+        {
+          title: "Users",
+          url: "#",
+          icon: User,
+        },
+
+        {
+          title: "Order",
+          url: "/orders/orders",
+          icon: Package, // or ShoppingBag, ClipboardList
+        }
+      ] : []),
+
+      ...(!user?.isAdmin ? [
+        {
+          title: "Request Pickup",
+          url: "/orders/customer/request",
+          icon: User,
+        },
+      ] : [])
+    ],
+    navSecondary: [
+      {
+        title: "Support",
+        url: "#",
+        icon: LifeBuoy,
+      },
+      {
+        title: "Feedback",
+        url: "#",
+        icon: Send,
+      },
+    ],
+  }
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
