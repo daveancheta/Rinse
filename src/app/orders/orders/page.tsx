@@ -45,8 +45,12 @@ function page() {
     const [orderStatus, setOrderStatus] = useState<string | null>(null)
 
     useEffect(() => {
-        handleGetPickUpOrder()
-    }, [handleGetPickUpOrder]);
+        const interval = setInterval(() => {
+            handleGetPickUpOrder()
+        }, 1000)
+
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         handleGetSession()
