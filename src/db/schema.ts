@@ -96,6 +96,18 @@ export const orders = pgTable(
   }
 )
 
+export const discordMessages = pgTable('discord_messages', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  messageId: text('message_id').unique().notNull(),
+  channelId: text('channel_id').notNull(),
+  authorId: text('author_id').notNull(),
+  authorUsername: text('author_username'),
+  content: text('content'),
+  timestamp: timestamp('timestamp').notNull(),
+  rawData: text('raw_data'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),

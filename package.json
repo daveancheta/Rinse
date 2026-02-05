@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "bot": "tsx scripts/discord-bot.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
@@ -21,6 +22,7 @@
     "better-auth": "^1.4.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "discord.js": "^14.25.1",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",
     "lucide-react": "^0.563.0",
