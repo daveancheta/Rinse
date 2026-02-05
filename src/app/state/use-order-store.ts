@@ -8,8 +8,9 @@ interface Orders {
     washLevel: string,
     paymentStatus: string,
     address: string,
-    createdAt: string,
-    updatedAt: string,
+    userAddress: string,
+    createdAt: Date,
+    updatedAt: Date,
 }
 
 interface Users {
@@ -42,7 +43,7 @@ interface OrderState {
     handleUpdatePaymentStatus: (id: string, status: string) => (void),
     handleUpdateOrderStatus: (id: string, status: string) => (void),
     handleDeleteOrder: (id: string) => (void),
-    handlePostOrder: (formdata: PostOrder) => (void),
+    handlePostOrder: (formdata: Orders) => (void),
     handleGetOrderByAuthId: () => (void),
 }
 
@@ -123,8 +124,23 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
         }
     },
 
-    handlePostOrder: async (formData: PostOrder) => {
+    handlePostOrder: async (formData: Orders) => {
         set({ isSubmitting: true });
+        const previousOrders = get().orders;
+        const tempId = `temp-${Date.now()}`;
+
+        const optimisticOrder: any = {
+            orders: {
+                id: tempId,
+                userId: tempId,
+                address: formData.userAddress,
+                status: "pickup",
+                paymentStatus: "pending",
+                washLevel: formData.washLevel,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        }
 
         try {
             const result = await fetch("/api/order/customer", {
@@ -133,11 +149,16 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
                 body: JSON.stringify(formData),
             })
 
+
+
             const res = await result.json();
 
             if (!res.success) {
                 return toast.error(res.message)
             } else {
+                set({
+                    orders: [...previousOrders, optimisticOrder]
+                })
                 return toast.success("Your laundry will be picked up in a minute!")
             }
 
