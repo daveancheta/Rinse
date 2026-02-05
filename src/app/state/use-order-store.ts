@@ -36,6 +36,7 @@ interface PostOrder {
 
 interface OrderState {
     isLoadingOrder: boolean,
+    isSubmitting: boolean,
     orders: Order[],
     handleGetPickUpOrder: () => (void),
     handleUpdatePaymentStatus: (id: string, status: string) => (void),
@@ -47,6 +48,7 @@ interface OrderState {
 
 export const UseOrderStore = create<OrderState>((set, get) => ({
     isLoadingOrder: false,
+    isSubmitting: false,
     orders: [],
 
     handleGetPickUpOrder: async () => {
@@ -122,7 +124,7 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
     },
 
     handlePostOrder: async (formData: PostOrder) => {
-        set({ isLoadingOrder: true });
+        set({ isSubmitting: true });
 
         try {
             const result = await fetch("/api/order/customer", {
@@ -142,7 +144,7 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
         } catch (error) {
             console.log(error)
         } finally {
-            set({ isLoadingOrder: false });
+            set({ isSubmitting: false });
         }
     },
 

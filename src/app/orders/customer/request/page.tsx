@@ -28,14 +28,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Calendar, History, Info, Loader2, MapPin, Truck, TruckElectric, WashingMachine } from "lucide-react"
+import { Activity, Calendar, History, Info, Loader2, MapPin, Truck, TruckElectric, WashingMachine } from "lucide-react"
 import { cn } from "@/lib/utils"
 import OrderSkeleton from "@/components/order-skeleton"
 
 
 function page() {
     const { user, handleGetSession, isLoadingAuth } = UseAuthStore();
-    const { handlePostOrder, isLoadingOrder, handleGetOrderByAuthId, orders } = UseOrderStore();
+    const { handlePostOrder, isLoadingOrder, handleGetOrderByAuthId, orders, isSubmitting } = UseOrderStore();
     const [check, setCheck] = useState<boolean>(false)
     const [formData, setFormData] = useState<string | any>({
         userAddress: "",
@@ -116,8 +116,8 @@ function page() {
                             <Button type="submit"
                                 disabled={
                                     !formData.userAddress.trim() ||
-                                    !formData.washLevel.trim() || isLoadingOrder}>
-                                <Loader2 className={cn("animate-spin", !isLoadingOrder && "hidden")} /> Save changes
+                                    !formData.washLevel.trim() || isSubmitting}>
+                                <Loader2 className={cn("animate-spin", !isSubmitting && "hidden")} /> Save changes
                             </Button>
                         </DialogFooter>
                     </form>
@@ -128,7 +128,7 @@ function page() {
                 <OrderSkeleton /> :
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-4 gap-4 mt-5">
                     {orders.map((order) =>
-                        <div className="bg-background dark:bg-neutral-900 rounded-sm flex flex-col justify-between border max-h-45" key={order.orders.id}>
+                        <div className="bg-background dark:bg-neutral-900 rounded-sm flex flex-col justify-between border max-h-55" key={order.orders.id}>
                             <div className={cn("px-4 py-3 rounded-t-sm",
                                 order.orders.status === "pickup" ? "bg-yellow-100" :
                                     order.orders.status === "washing" ? "bg-blue-100" :
@@ -175,9 +175,10 @@ function page() {
                                         minute: "2-digit",
                                         hour12: true
                                     })}
-
                                 </div>
-
+                                <div className="flex flex-row items-center gap-1 text-sm capitalize">
+                                    <Activity className="size-4" /> {order.orders.washLevel}
+                                </div>
                             </div>
                             <div className="flex justify-end p-4">
                                 <div className={cn("flex flex-row items-center gap-1 text-xs capitalize px-2 py-1 rounded-full",
