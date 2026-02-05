@@ -147,6 +147,8 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
     },
 
     handleGetOrderByAuthId: async () => {
+        set({ isLoadingOrder: true });
+
         try {
             const res = await fetch("/api/order/customer")
 
@@ -154,7 +156,9 @@ export const UseOrderStore = create<OrderState>((set, get) => ({
 
             set({ orders: data.order })
         } catch (error) {
-
+            console.log(error)
+        } finally {
+            set({ isLoadingOrder: false })
         }
     }
 
