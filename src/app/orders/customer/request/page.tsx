@@ -125,7 +125,7 @@ function page() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-4 gap-4 mt-5">
                 {orders.map((order) =>
-                    <div className="bg-background dark:bg-neutral-900 rounded-sm flex flex-col justify-between" key={order.orders.id}>
+                    <div className="bg-background dark:bg-neutral-900 rounded-sm flex flex-col justify-between border" key={order.orders.id}>
                         <div className={cn("px-4 py-3 rounded-t-sm",
                             order.orders.status === "pickup" ? "bg-yellow-100" :
                                 order.orders.status === "washing" ? "bg-blue-100" :
